@@ -41,7 +41,6 @@ int Login()
     file_users.open("Users.txt",ios::in);
     while(getline(file_users,line))
     {
-        cout << line << endl;
         part_nr = 1;
 
         len = line.length();
@@ -81,13 +80,7 @@ int Login()
     }   //End while
 
     file_users.close();
-/*
-    for(vector<User>::iterator itr = User_vr.begin();
-    itr != User_vr.end();++itr)
-    {
-        cout << (*itr).login << endl;
-    }
-*/
+
     cout << "Podaj login: \n";
     cin >> login;
 
@@ -121,6 +114,88 @@ int Login()
     }
 }
 
+void Registration()
+{
+    vector<User>User_vr;
+    User user_local;
+    fstream file_users;
+    string tmp_check,login,pass,part,line_out,line;
+    int len,part_int,part_nr,id_last=1;
+
+    cout << "// REJESTRACJA //\n";
+
+    file_users.open("Users.txt",ios::in);
+    while(getline(file_users,line))
+    {
+        part_nr = 1;
+
+        len = line.length();
+        for (int i=0;i<len;i++)
+        {
+            tmp_check = line[i];
+            if (tmp_check == "|")
+            {
+                switch(part_nr)
+                {
+                case 1:
+                    part_int = atoi(part.c_str());
+                    user_local.id = part_int;
+                    break;
+                case 2:
+                    user_local.login = part;
+                    break;
+                case 3:
+                    user_local.pass = part;
+                    break;
+                default:
+                    cout << "Read_User_DB-ERROR: incorrect part_nr\n";
+                    break;
+                }
+                if (part_nr == 3)
+                {
+                    User_vr.push_back(user_local);
+                }
+                part_nr++;
+                part.clear();
+            }
+            else
+            {
+                part.push_back(line[i]);
+            }
+        }   //End for
+    }   //End while
+    file_users.close();
+    /////////////////////////////////////////////////////////////
+    cout << "Podaj login: \n";
+    cin >> login;
+    for (vector<User>::iterator itr_users = User_vr.begin();
+    itr_users != User_vr.end();++itr_users)
+    {
+        if ((*itr_users).login == login)
+        {
+            cout << "Taki login juz istnieje \n";
+            break;
+        }
+        if (id_last <= (*itr_users).id)
+            id_last = (*itr_users).id + 1;
+    }
+
+    cout << "Podaj haslo: \n";
+    cin >> pass;
+
+
+    file_users.open("Users.txt",ios::app);
+    line_out.clear();
+    //to_string((*itr_person).id)
+    line_out += to_string(id_last) + "|";
+    line_out += login + "|";
+    line_out += pass + "|";
+    //cout << line_out << endl;
+    file_users << line_out << endl;
+
+    file_users.close();
+}
+
 auto Main_Menu()
 {
     Menu_output flags;
@@ -143,7 +218,7 @@ auto Main_Menu()
         }
         else if(MM_choice == 2)
         {
-            cout << "Registration \n";//Registration();
+            Registration();
             break;
         }
         else if(MM_choice == 3)
@@ -167,39 +242,36 @@ int User_Menu()
     cout << "4. Wyswietl wszystich adresatow. \n";
     cout << "5. Usun adresata. \n";
     cout << "6. Edytuj adresata. \n";
-    cout << "9. Zakoncz program. \n";
+    cout << "7. Edytuj haslo. \n";
+    cout << "9. Wyloguj. \n";
     cout << "Twoj wybor: \n";
     cin >> person_choice;
     return person_choice;
 }
 
-void File_out(vector<Person>&Person_vr_local)
+void File_out_add(vector<Person>&Person_vr_local, int id_add_handed)
 {
     fstream file;
     fstream file_tmp;
     string line_out;
 
-    //file_tmp.open("Database_tmp.txt".ios::in);
-
-
-
-
-
-    file.open("Database.txt",ios::out);
+    file.open("Database.txt",ios::app);
 
     for (vector<Person>::iterator itr_person = Person_vr_local.begin();
     itr_person != Person_vr_local.end();++itr_person)
     {
-        //cout << (*itr_person).name << endl;
-        line_out.clear();
-        line_out += to_string((*itr_person).id) + "|";
-        line_out += to_string((*itr_person).user) + "|";
-        line_out += (*itr_person).name + "|";
-        line_out += (*itr_person).surname + "|";
-        line_out += (*itr_person).tel + "|";
-        line_out += (*itr_person).email + "|";
-        line_out += (*itr_person).address + "|";
-        file << line_out << endl;;
+        if ((*itr_person).id == id_add_handed)
+        {
+            line_out.clear();
+            line_out += to_string((*itr_person).id) + "|";
+            line_out += to_string((*itr_person).user) + "|";
+            line_out += (*itr_person).name + "|";
+            line_out += (*itr_person).surname + "|";
+            line_out += (*itr_person).tel + "|";
+            line_out += (*itr_person).email + "|";
+            line_out += (*itr_person).address + "|";
+            file << line_out << endl;;
+        }
     }
     file.close();
 }
@@ -217,25 +289,17 @@ void File_out_edit(vector<Person>&Person_vr_local,int id_edit)
     while(getline(file,line))
     {
         i = 0;
-        //cout << "i: " << line[i] << endl;
         tmp_check = line[i];
         while (tmp_check != "|")
         {
             part.push_back(line[i]);
             i++;
             tmp_check = line[i];
-            //cout << tmp_check << endl;
-            //cout << "part: " << part << endl;
         }
-
-        //cout << "FO. 3\n";
         part_int = atoi(part.c_str());
 
-        //cout << "id_edit: " << id_edit << endl;
-        //cout << "part_int: " << part_int << endl;
         if (id_edit == part_int)
         {
-            //cout << "id_edit == part_int \n";
             for (vector<Person>::iterator itr_person = Person_vr_local.begin();
             itr_person != Person_vr_local.end();++itr_person)
             {
@@ -258,9 +322,7 @@ void File_out_edit(vector<Person>&Person_vr_local,int id_edit)
             file_tmp << line << endl;
         }
         part.clear();
-        //cout << "------------------\n";
     }   //End while
-    //cout << "OUT OF THE LOOP\n";
     file_tmp.close();
     file.close();
 
@@ -268,10 +330,49 @@ void File_out_edit(vector<Person>&Person_vr_local,int id_edit)
     rename("Database_tmp.txt","Database.txt");
 }
 
-void Add_person(vector<Person>&Person_vr_local)
+void File_out_delete(vector<Person>&Person_vr_local,int id_delete)
 {
     Person person_local;
-    fstream file_add;
+    fstream file;
+    fstream file_tmp;
+    string line_out,part,line,tmp_check;
+    int i, part_int=0;
+
+    file_tmp.open("Database_tmp.txt",ios::out);
+    file.open("Database.txt",ios::in);
+    while(getline(file,line))
+    {
+        i = 0;
+        tmp_check = line[i];
+        while (tmp_check != "|")
+        {
+            part.push_back(line[i]);
+            i++;
+            tmp_check = line[i];
+        }
+        part_int = atoi(part.c_str());
+        if (id_delete == part_int)
+        {}
+        else
+        {
+            file_tmp << line << endl;
+        }
+        part.clear();
+    }   //End while
+    file_tmp.close();
+    file.close();
+
+    remove("Database.txt");
+    rename("Database_tmp.txt","Database.txt");
+}
+
+void Add_person(vector<Person>&Person_vr_local, int id_user)
+{
+    Person person_local;
+    fstream file;
+    string tmp_check,line,part;
+    int id_add,i,part_int,id_last=1;
+    //fstream file_add;
     cout << "-----------------------------" << endl;
     cout << "DODAJ ADRESATA" << endl;
     cout << "-----------------------------" << endl;
@@ -290,14 +391,44 @@ void Add_person(vector<Person>&Person_vr_local)
 
     if (!Person_vr_local.empty())
     {
-        person_local.id = Person_vr_local.back().id + 1;
+        id_add = Person_vr_local.back().id + 1;
+        person_local.id = id_add;
+        person_local.user = id_user;
+        cout << id_add << endl;
+        cout << person_local.id << endl;
+        cout << person_local.user << endl;
     }
     else
     {
-        person_local.id = 1;
+        /////////////////////////////////////////
+        file.open("Database.txt",ios::in);
+        while(getline(file,line))
+        {
+            cout << line << endl;
+            i = 0;
+            tmp_check = line[i];
+            while (tmp_check != "|")
+            {
+                part.push_back(line[i]);
+                i++;
+                tmp_check = line[i];
+            }
+            part_int = atoi(part.c_str());
+            if (id_last <= part_int)
+                id_last = part_int+1;
+            part.clear();
+        }   //End while
+        /////////////////////////////////////////
+        person_local.id = id_last;
+        person_local.user = id_user;
     }
     Person_vr_local.push_back(person_local);
-    File_out(Person_vr_local);
+
+    cout << "new_id: " << id_last << endl;
+    for (vector<Person>::iterator itr_person = Person_vr_local.begin();
+    itr_person != Person_vr_local.end();++itr_person)
+        cout << (*itr_person).name << endl;
+    File_out_add(Person_vr_local,id_last);
 
 }
 
@@ -307,10 +438,6 @@ void Read_DB(vector<Person>&Person_vr_local, int user_local)
     fstream file;
     string line,part,tmp_check;
     int len,part_nr,part_int;
-
-    for (vector<Person>::iterator itr_person = Person_vr_local.begin();
-    itr_person != Person_vr_local.end();++itr_person)
-        cout << (*itr_person).name << endl;
 
     file.open("Database.txt",ios::in);
     while(getline(file,line))
@@ -366,10 +493,6 @@ void Read_DB(vector<Person>&Person_vr_local, int user_local)
     }   //End while
     file.close();
 
-    //cout << "2.ReadDB\n";
-    //for (vector<Person>::iterator itr_person = Person_vr_local.begin();
-    //itr_person != Person_vr_local.end();++itr_person)
-    //    cout << (*itr_person).name << endl;
 }   //End Read_DB
 
 void Find_name(vector<Person>&Person_vr_local)
@@ -468,7 +591,7 @@ void Delete_person(vector<Person> &Person_vr_local)
                          return person_to_delete.id == delete_id;
                       }),
                       Person_vr_local.end());
-        File_out(Person_vr_local);
+        File_out_delete(Person_vr_local,delete_id);
     }
 
     cout << endl;
@@ -496,23 +619,13 @@ void Edit_person(vector<Person> &Person_vr_local)
     cout << "5 - Adres" << endl;
     cout << "6 - Powrot do menu" << endl;
     cin >> edit_part;
-    //cout << "edit_part: " << edit_part << endl;
-
-    //cout << "1.check\n";
-    //for (vector<Person>::iterator itr_person = Person_vr_local.begin();
-    //itr_person != Person_vr_local.end();++itr_person)
-    //    cout << (*itr_person).name << endl;
-
-
 
 ////////////////////////////////////////////////////////////////////////////
     for (vector<Person>::iterator itr_person = Person_vr_local.begin();
     itr_person != Person_vr_local.end();++itr_person)
     {
-        //cout << "1. \n";
         if ((*itr_person).id == edit_id)
         {
-            //cout << "2. \n";
             switch(edit_part)
             {
             case 1:
@@ -557,20 +670,88 @@ void Edit_person(vector<Person> &Person_vr_local)
     }
 ////////////////////////////////////////////////////////////////////////////
 
-    cout << "-------------\n";
-    for (vector<Person>::iterator itr_person = Person_vr_local.begin();
-    itr_person != Person_vr_local.end();++itr_person)
-        cout << (*itr_person).name << endl;
-    cout << "-------------\n";
     File_out_edit(Person_vr_local,edit_id);
-
-    for (vector<Person>::iterator itr_person = Person_vr_local.begin();
-    itr_person != Person_vr_local.end();++itr_person)
-        cout << (*itr_person).name << endl;
 
     cout << endl;
     cout << "Press Enter to go back to Menu\n";
     cin.get();
+}
+
+void Edit_pass(int user_id)
+{
+    vector<User>User_vr;
+    fstream file_users;
+    string pass,line, part, tmp_check,line_out;
+    int len, part_nr, part_int;
+    User user_local;
+
+    file_users.open("Users.txt",ios::in);
+    while(getline(file_users,line))
+    {
+        part_nr = 1;
+
+        len = line.length();
+        for (int i=0;i<len;i++)
+        {
+            tmp_check = line[i];
+            if (tmp_check == "|")
+            {
+                switch(part_nr)
+                {
+                case 1:
+                    part_int = atoi(part.c_str());
+                    user_local.id = part_int;
+                    break;
+                case 2:
+                    user_local.login = part;
+                    break;
+                case 3:
+                    user_local.pass = part;
+                    break;
+                default:
+                    cout << "Read_User_DB-ERROR: incorrect part_nr\n";
+                    break;
+                }
+                if (part_nr == 3)
+                {
+                    User_vr.push_back(user_local);
+                }
+                part_nr++;
+                part.clear();
+            }
+            else
+            {
+                part.push_back(line[i]);
+            }
+        }   //End for
+    }   //End while
+    file_users.close();
+
+    cout << "Podaj nowe haslo \n";
+    cin >> pass;
+
+    for (vector<User>::iterator itr_user = User_vr.begin();
+    itr_user != User_vr.end();++itr_user)
+    {
+        if ((*itr_user).id == user_id)
+        {
+            (*itr_user).pass = pass;
+        }
+    }
+
+    file_users.open("Users.txt",ios::out);
+
+    for (vector<User>::iterator itr_user = User_vr.begin();
+    itr_user != User_vr.end();++itr_user)
+    {
+        line_out.clear();
+        line_out += to_string((*itr_user).id) + "|";
+        line_out += (*itr_user).login + "|";
+        line_out += (*itr_user).pass + "|";
+        file_users << line_out << endl;
+    }
+    file_users.close();
+
 }
 
 int main()
@@ -594,7 +775,7 @@ int main()
                     switch(user_choice)
                     {
                     case 1:
-                        Add_person(Person_vr);
+                        Add_person(Person_vr,flags.user);
                         break;
                     case 2:
                         Find_name(Person_vr);
@@ -611,12 +792,18 @@ int main()
                     case 6:
                         Edit_person(Person_vr);
                         break;
+                    case 7:
+                        Edit_pass(flags.user);
+                        break;
                     case 9:
-                        return 0;
+                        //return 0;
+                        flags.user = 0;
                         break;
                     default:
                         cout << "bledna opcja\n";
                     }
+                    if (flags.user == 0)
+                        break;
                 }
             }
         }
@@ -624,6 +811,5 @@ int main()
         {
             return 0;
         }
-
     }
 }
