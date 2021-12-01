@@ -408,11 +408,30 @@ void Add_person(vector<Person>&Person_vr_local, int id_user)
                 id_last = part_int+1;
             part.clear();
         }   //End while
+        /////////////////////////////////////////
         person_local.id = id_last;
         person_local.user = id_user;
     }
     else
     {
+        /////////////////////////////////////////
+        file.open("Database.txt",ios::in);
+        while(getline(file,line))
+        {
+            i = 0;
+            tmp_check = line[i];
+            while (tmp_check != "|")
+            {
+                part.push_back(line[i]);
+                i++;
+                tmp_check = line[i];
+            }
+            part_int = atoi(part.c_str());
+            if (id_last <= part_int)
+                id_last = part_int+1;
+            part.clear();
+        }   //End while
+        /////////////////////////////////////////
         person_local.id = id_last;
         person_local.user = id_user;
     }
