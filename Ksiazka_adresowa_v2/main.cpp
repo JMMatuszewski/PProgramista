@@ -388,53 +388,27 @@ void Add_person(vector<Person>&Person_vr_local, int id_user)
     cout << "Podaj adres: " << endl;
     getline(cin,person_local.address);
 
+    /////////////////////////////////////////
+    file.open("Database.txt",ios::in);
+    while(getline(file,line))
+    {
+        i = 0;
+        tmp_check = line[i];
+        while (tmp_check != "|")
+        {
+            part.push_back(line[i]);
+            i++;
+            tmp_check = line[i];
+        }
+        part_int = atoi(part.c_str());
+        if (id_last <= part_int)
+            id_last = part_int+1;
+        part.clear();
+    }   //End while
+    /////////////////////////////////////////
+    person_local.id = id_last;
+    person_local.user = id_user;
 
-    if (!Person_vr_local.empty())
-    {
-        /////////////////////////////////////////
-        file.open("Database.txt",ios::in);
-        while(getline(file,line))
-        {
-            i = 0;
-            tmp_check = line[i];
-            while (tmp_check != "|")
-            {
-                part.push_back(line[i]);
-                i++;
-                tmp_check = line[i];
-            }
-            part_int = atoi(part.c_str());
-            if (id_last <= part_int)
-                id_last = part_int+1;
-            part.clear();
-        }   //End while
-        /////////////////////////////////////////
-        person_local.id = id_last;
-        person_local.user = id_user;
-    }
-    else
-    {
-        /////////////////////////////////////////
-        file.open("Database.txt",ios::in);
-        while(getline(file,line))
-        {
-            i = 0;
-            tmp_check = line[i];
-            while (tmp_check != "|")
-            {
-                part.push_back(line[i]);
-                i++;
-                tmp_check = line[i];
-            }
-            part_int = atoi(part.c_str());
-            if (id_last <= part_int)
-                id_last = part_int+1;
-            part.clear();
-        }   //End while
-        /////////////////////////////////////////
-        person_local.id = id_last;
-        person_local.user = id_user;
-    }
     Person_vr_local.push_back(person_local);
 
     File_out_add(Person_vr_local,id_last);
@@ -673,7 +647,15 @@ void Edit_person(vector<Person> &Person_vr_local)
                 cout << "Wybrano bledna opcje\n";
                 break;
             }
-        break;
+            break;
+        }
+        else
+        {
+            if (itr_person == Person_vr_local.end())
+            {
+                cout << "Brak adresata \n";
+                break;
+            }
         }
     }
 ////////////////////////////////////////////////////////////////////////////
