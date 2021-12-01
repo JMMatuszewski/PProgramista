@@ -260,8 +260,6 @@ void File_out_add(vector<Person>&Person_vr_local, int id_add_handed)
     for (vector<Person>::iterator itr_person = Person_vr_local.begin();
     itr_person != Person_vr_local.end();++itr_person)
     {
-        cout << (*itr_person).id << endl;
-        cout << id_add_handed << endl;
         if ((*itr_person).id == id_add_handed)
         {
             line_out.clear();
@@ -396,9 +394,6 @@ void Add_person(vector<Person>&Person_vr_local, int id_user)
         id_last = Person_vr_local.back().id + 1;
         person_local.id = id_last;
         person_local.user = id_user;
-        cout << id_last << endl;
-        cout << person_local.id << endl;
-        cout << person_local.user << endl;
     }
     else
     {
@@ -406,7 +401,6 @@ void Add_person(vector<Person>&Person_vr_local, int id_user)
         file.open("Database.txt",ios::in);
         while(getline(file,line))
         {
-            cout << line << endl;
             i = 0;
             tmp_check = line[i];
             while (tmp_check != "|")
@@ -426,7 +420,6 @@ void Add_person(vector<Person>&Person_vr_local, int id_user)
     }
     Person_vr_local.push_back(person_local);
 
-    cout << "new_id: " << id_last << endl;
     for (vector<Person>::iterator itr_person = Person_vr_local.begin();
     itr_person != Person_vr_local.end();++itr_person)
         cout << (*itr_person).name << endl;
