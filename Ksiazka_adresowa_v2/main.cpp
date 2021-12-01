@@ -555,7 +555,7 @@ void Show_all(vector<Person>&Person_vr_local)
 
 void Delete_person(vector<Person> &Person_vr_local)
 {
-    int delete_id;
+    int delete_id, delete_correct = 0;
     string confirmation;
     confirmation.clear();
     cout << "-----------------------------" << endl;
@@ -563,9 +563,18 @@ void Delete_person(vector<Person> &Person_vr_local)
     cout << "-----------------------------" << endl;
     cout << "Prosze podac ID" << endl;
     cin >> delete_id;
+
+    for (vector<Person>::iterator itr_person = Person_vr_local.begin();
+    itr_person != Person_vr_local.end();++itr_person)
+    {
+        if ((*itr_person).id == delete_id)
+            delete_correct = 1;
+    }
+
+
     cout << "Wcisnij 't' aby potwierdzic" << endl;
     cin >> confirmation;
-    if (confirmation == "t")
+    if (confirmation == "t" & delete_correct == 1)
     {
         Person_vr_local.erase(
             remove_if(Person_vr_local.begin(),Person_vr_local.end(),[&](Person const & person_to_delete)
@@ -575,6 +584,9 @@ void Delete_person(vector<Person> &Person_vr_local)
                       Person_vr_local.end());
         File_out_delete(Person_vr_local,delete_id);
     }
+    else
+        cout << "Wrong ID\n";
+
 
     cout << endl;
     cout << "Press Enter to go back to Menu\n";
@@ -585,7 +597,7 @@ void Delete_person(vector<Person> &Person_vr_local)
 void Edit_person(vector<Person> &Person_vr_local)
 {
     Person person_local;
-    int edit_id,edit_part;
+    int edit_id,edit_part,edit_correct=0;
     string edit_tmp;
 
     cout << "-----------------------------" << endl;
@@ -647,20 +659,15 @@ void Edit_person(vector<Person> &Person_vr_local)
                 cout << "Wybrano bledna opcje\n";
                 break;
             }
+            edit_correct = 1;
             break;
-        }
-        else
-        {
-            if (itr_person == Person_vr_local.end())
-            {
-                cout << "Brak adresata \n";
-                break;
-            }
         }
     }
 ////////////////////////////////////////////////////////////////////////////
-
-    File_out_edit(Person_vr_local,edit_id);
+    if (edit_correct == 1)
+        File_out_edit(Person_vr_local,edit_id);
+    else
+        cout << "Brak adresata \n";
 
     cout << endl;
     cout << "Press Enter to go back to Menu\n";
