@@ -260,6 +260,8 @@ void File_out_add(vector<Person>&Person_vr_local, int id_add_handed)
     for (vector<Person>::iterator itr_person = Person_vr_local.begin();
     itr_person != Person_vr_local.end();++itr_person)
     {
+        cout << (*itr_person).id << endl;
+        cout << id_add_handed << endl;
         if ((*itr_person).id == id_add_handed)
         {
             line_out.clear();
@@ -371,7 +373,7 @@ void Add_person(vector<Person>&Person_vr_local, int id_user)
     Person person_local;
     fstream file;
     string tmp_check,line,part;
-    int id_add,i,part_int,id_last=1;
+    int i,part_int,id_last=1;
     //fstream file_add;
     cout << "-----------------------------" << endl;
     cout << "DODAJ ADRESATA" << endl;
@@ -391,10 +393,10 @@ void Add_person(vector<Person>&Person_vr_local, int id_user)
 
     if (!Person_vr_local.empty())
     {
-        id_add = Person_vr_local.back().id + 1;
-        person_local.id = id_add;
+        id_last = Person_vr_local.back().id + 1;
+        person_local.id = id_last;
         person_local.user = id_user;
-        cout << id_add << endl;
+        cout << id_last << endl;
         cout << person_local.id << endl;
         cout << person_local.user << endl;
     }
