@@ -1,0 +1,8 @@
+3|1|ccc|ccc|ccc|ccc|ccc|
+4|2|ddd|ddd|ddd|ddd|ddd|
+5|1|eee|eee|eee|eee|eee|
+6|1|fff|fff|fff|ffffff|fff|
+7|1|ggg|ggg|ggg|ggg|ggg|
+8|1|hhh|hhh|hhh|hhh|hhh|
+10|2|jjj|jjj|jjj|jjj|jjj|
+11|2|kkk|kkk|kkk|kkk|kkk|

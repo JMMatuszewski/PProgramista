@@ -1,0 +1,8 @@
+1|1|Artur|Nowak|333 222 111|artur@nowak.pl|ul. Wesola 3a; 33-300 Krakow|
+2|2|Bartek|Glowacki|333 222 111|bartek@glowacki.pl|ul. Sloneczna 61; 33-330 Krakow|
+4|1|Guy|Free|999 888 777|guy@free.pl|some.movie 5/10|
+5|2|Alan|Wake|1234567|sdgfs|BrightFalls|
+6|3|Max|Pain|666 666 666|Max@nice.pl|Pain 6/6|
+7|3|Max|Mad|123456|Mad@Max.com|nowhere|
+8|1|asd|asd|asd|asd|asd|
+9|2|Luke|Skywalker|987564|Luke@Sky.pl|Tatootine 0/10|

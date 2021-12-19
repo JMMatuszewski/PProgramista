@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1638986566 source:d:\git_jmm\pprogramista\ksiazka_adresowa_v2\main.cpp
+	<iostream>
+	<string>
+	<vector>
+	<algorithm>
+	<fstream>
+
+1638989401 source:d:\git_jmm\pprogramista\ksiazka_adresowa_v2\main_menu.cpp
+
