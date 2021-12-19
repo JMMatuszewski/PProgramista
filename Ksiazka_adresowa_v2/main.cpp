@@ -388,34 +388,27 @@ void Add_person(vector<Person>&Person_vr_local, int id_user)
     cout << "Podaj adres: " << endl;
     getline(cin,person_local.address);
 
-
-    if (!Person_vr_local.empty())
+    /////////////////////////////////////////
+    file.open("Database.txt",ios::in);
+    while(getline(file,line))
     {
-        /////////////////////////////////////////
-        file.open("Database.txt",ios::in);
-        while(getline(file,line))
+        i = 0;
+        tmp_check = line[i];
+        while (tmp_check != "|")
         {
-            i = 0;
+            part.push_back(line[i]);
+            i++;
             tmp_check = line[i];
-            while (tmp_check != "|")
-            {
-                part.push_back(line[i]);
-                i++;
-                tmp_check = line[i];
-            }
-            part_int = atoi(part.c_str());
-            if (id_last <= part_int)
-                id_last = part_int+1;
-            part.clear();
-        }   //End while
-        person_local.id = id_last;
-        person_local.user = id_user;
-    }
-    else
-    {
-        person_local.id = id_last;
-        person_local.user = id_user;
-    }
+        }
+        part_int = atoi(part.c_str());
+        if (id_last <= part_int)
+            id_last = part_int+1;
+        part.clear();
+    }   //End while
+    /////////////////////////////////////////
+    person_local.id = id_last;
+    person_local.user = id_user;
+
     Person_vr_local.push_back(person_local);
 
     File_out_add(Person_vr_local,id_last);
@@ -562,7 +555,7 @@ void Show_all(vector<Person>&Person_vr_local)
 
 void Delete_person(vector<Person> &Person_vr_local)
 {
-    int delete_id;
+    int delete_id, delete_correct = 0;
     string confirmation;
     confirmation.clear();
     cout << "-----------------------------" << endl;
@@ -570,9 +563,18 @@ void Delete_person(vector<Person> &Person_vr_local)
     cout << "-----------------------------" << endl;
     cout << "Prosze podac ID" << endl;
     cin >> delete_id;
+
+    for (vector<Person>::iterator itr_person = Person_vr_local.begin();
+    itr_person != Person_vr_local.end();++itr_person)
+    {
+        if ((*itr_person).id == delete_id)
+            delete_correct = 1;
+    }
+
+
     cout << "Wcisnij 't' aby potwierdzic" << endl;
     cin >> confirmation;
-    if (confirmation == "t")
+    if (confirmation == "t" & delete_correct == 1)
     {
         Person_vr_local.erase(
             remove_if(Person_vr_local.begin(),Person_vr_local.end(),[&](Person const & person_to_delete)
@@ -582,6 +584,9 @@ void Delete_person(vector<Person> &Person_vr_local)
                       Person_vr_local.end());
         File_out_delete(Person_vr_local,delete_id);
     }
+    else
+        cout << "Wrong ID\n";
+
 
     cout << endl;
     cout << "Press Enter to go back to Menu\n";
@@ -592,7 +597,7 @@ void Delete_person(vector<Person> &Person_vr_local)
 void Edit_person(vector<Person> &Person_vr_local)
 {
     Person person_local;
-    int edit_id,edit_part;
+    int edit_id,edit_part,edit_correct=0;
     string edit_tmp;
 
     cout << "-----------------------------" << endl;
@@ -654,12 +659,15 @@ void Edit_person(vector<Person> &Person_vr_local)
                 cout << "Wybrano bledna opcje\n";
                 break;
             }
-        break;
+            edit_correct = 1;
+            break;
         }
     }
 ////////////////////////////////////////////////////////////////////////////
-
-    File_out_edit(Person_vr_local,edit_id);
+    if (edit_correct == 1)
+        File_out_edit(Person_vr_local,edit_id);
+    else
+        cout << "Brak adresata \n";
 
     cout << endl;
     cout << "Press Enter to go back to Menu\n";
